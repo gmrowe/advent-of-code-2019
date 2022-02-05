@@ -81,9 +81,10 @@ impl IComp {
         }
     }
 
-    fn get_op_values(opval: isize) -> (isize, Vec<usize>) {
+    fn get_op_values(&self) -> (isize, Vec<usize>) {
         const OPCODE_FACTOR: isize = 100;
         const PARAM_MODE_FACTOR: isize = 10;
+        let opval = self.program[self.iptr];
         let op_code = opval % OPCODE_FACTOR;
         let mut param_modes = Vec::new();
         let mut params = opval / OPCODE_FACTOR;
@@ -153,7 +154,7 @@ impl IComp {
     fn execute(&mut self, user_input: isize) {
         const IOOP_CHUNK_SIZE: usize = 2;
         while self.exec_state != Cont::Halt {
-            let (opcode, param_modes) = Self::get_op_values(self.program[self.iptr]);
+            let (opcode, param_modes) = self.get_op_values();
             match opcode {
                 1 => self.bin_op(param_modes, |(m, n)| m + n),
                 2 => self.bin_op(param_modes, |(m, n)| m * n),
